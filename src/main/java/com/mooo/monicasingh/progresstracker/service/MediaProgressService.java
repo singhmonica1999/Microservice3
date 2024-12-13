@@ -4,25 +4,31 @@ import com.mooo.monicasingh.progresstracker.entity.MediaProgress;
 import com.mooo.monicasingh.progresstracker.repository.MediaProgressRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class MediaProgressService {
+    private final MediaProgressRepository MediaProgressRepository;
 
-    private final MediaProgressRepository repository;
-
-    public MediaProgressService(MediaProgressRepository repository) {
-        this.repository = repository;
+    public MediaProgressService(MediaProgressRepository MediaProgressRepository) {
+        this.MediaProgressRepository = MediaProgressRepository;
     }
 
-    public MediaProgress saveOrUpdateProgress(MediaProgress progress) {
-        Optional<MediaProgress> existingProgress = repository.findByUserIdAndMediaId(progress.getUserId(), progress.getMediaId());
-        existingProgress.ifPresent(existing -> progress.setId(existing.getId()));
-        return repository.save(progress);
+    public List<MediaProgress> getProgressByUserId(Long userId) {
+        return MediaProgressRepository.findByUserId(userId);
     }
 
-    public Optional<MediaProgress> getProgress(Long userId, Long mediaId) {
-        return repository.findByUserIdAndMediaId(userId, mediaId);
+    public List<MediaProgress> getProgressByUserIdAndMediaType(Long userId, String mediaType) {
+        return MediaProgressRepository.findByUserIdAndMediaType(userId, mediaType);
+    }
+
+    public MediaProgress saveProgress(MediaProgress progress) {
+        progress.setLastUpdated(LocalDateTime.now());
+        return MediaProgressRepository.save(progress);
+    }
+
+    public void deleteProgress(Long progressId) {
+        MediaProgressRepository.deleteById(progressId);
     }
 }
-

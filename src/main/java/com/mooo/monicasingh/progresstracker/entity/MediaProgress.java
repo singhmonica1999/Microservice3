@@ -27,4 +27,12 @@ public class MediaProgress {
 
     @Column(name = "last_updated", nullable = false, updatable = false)
     private LocalDateTime lastUpdated = LocalDateTime.now();
+
+    @Column(name = "mediaType", nullable = false)
+    private String mediaType; // e.g., MOVIE, SERIES, GAME, BOOK
+
+    private Integer currentEpisode; // For SERIES
+    private Integer totalEpisodes; // For SERIES
+
+    private Integer progressPercentage; // e.g., 0 to 100
 }
