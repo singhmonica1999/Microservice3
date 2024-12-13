@@ -1,9 +1,10 @@
 package com.mooo.monicasingh.progresstracker.controller;
 
 import com.mooo.monicasingh.progresstracker.entity.MediaProgress;
+import com.mooo.monicasingh.progresstracker.publisher.ProgressPublisher;
 import com.mooo.monicasingh.progresstracker.service.MediaProgressService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,11 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/progress")
+@Validated
 public class MediaProgressController {
 
     private final MediaProgressService service;
+    private final ProgressPublisher progressPublisher;
 
-    public MediaProgressController(MediaProgressService service) {
+    public MediaProgressController(MediaProgressService service, ProgressPublisher progressPublisher) {
+        this.progressPublisher = progressPublisher;
         this.service = service;
     }
 
@@ -40,5 +44,11 @@ public class MediaProgressController {
     public ResponseEntity<Void> deleteProgress(@PathVariable Long progressId) {
         service.deleteProgress(progressId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("{userId}")
+    public String updateProgress(@PathVariable String userId, @RequestBody String progressUpdate) {
+        progressPublisher.publishProgressUpdate(userId, progressUpdate);
+        return "Progress update sent for user: " + userId;
     }
 }
