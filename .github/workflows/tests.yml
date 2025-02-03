@@ -30,7 +30,7 @@ jobs:
 
       - name: Build and Start Spring Boot App
         run: |
-          ./mvnw clean package -DskipTests
+          mvn clean package -DskipTests
           java -jar target/*.jar &
           echo $! > application.pid
 
