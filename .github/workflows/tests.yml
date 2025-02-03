@@ -1,0 +1,61 @@
+name: Postman API Test Pipeline
+
+on:
+  push:
+    branches:
+      - integration-tests-with-postman-collection
+  pull_request:
+
+jobs:
+  run-postman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+
+      - name: Set Up Node.js for Newman
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Build and Start Spring Boot App
+        run: |
+          ./mvnw clean package -DskipTests
+          java -jar target/*.jar &
+          echo $! > application.pid
+
+      - name: Wait for the service to be up
+        run: |
+          for i in {1..30}; do
+            echo "Checking if application is up..."
+            if curl --silent --fail http://localhost:8020/actuator/health; then
+              echo "Application is up!"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Application did not start in time"
+          exit 1
+
+      - name: Run Postman Collection Tests
+        env:
+          BASE_URL: "http://localhost:8020"
+        run: |
+          newman run postman_collection.json --environment postman_environment.json
+
+      - name: Cleanup Application
+        if: always()
+        run: |
+          if [ -f application.pid ]; then
+            kill $(cat application.pid)
+            rm application.pid
+          fi

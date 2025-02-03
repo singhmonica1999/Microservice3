@@ -5,10 +5,11 @@ import com.mooo.monicasingh.progresstracker.publisher.ProgressPublisher;
 import com.mooo.monicasingh.progresstracker.service.MediaProgressService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@RestController
+@Controller
 @RequestMapping("/progress")
 public class MediaProgressController {
 
@@ -36,7 +37,7 @@ public class MediaProgressController {
 
     @PostMapping("/{userId}")
     public String updateProgress(@PathVariable String userId, @RequestBody String progressUpdate) {
-        progressPublisher.sendProgressUpdate(userId, progressUpdate);
+//        progressPublisher.sendProgressUpdate(userId, progressUpdate);
         return "Progress update sent for user: " + userId;
     }
 }

@@ -1,0 +1,38 @@
+{
+  "info": {
+    "name": "Progress API Collection",
+    "_postman_id": "12345678-1234-5678-1234-567812345678",
+    "description": "Postman collection to test the /progress API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /progress",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 101,\n  \"mediaId\": 205,\n  \"currentPosition\": 50,\n  \"completed\": false,\n  \"lastUpdated\": \"2025-01-27T12:34:56\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8020/progress",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8020",
+          "path": [
+            "progress"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
