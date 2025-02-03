@@ -23,7 +23,7 @@ jobs:
       - name: Set Up Node.js for Newman
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
 
       - name: Install Newman
         run: npm install -g newman
